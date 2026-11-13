@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: local
+    include:
+      - jwt
+      - oauth
+
+server:
+  port: 8080
