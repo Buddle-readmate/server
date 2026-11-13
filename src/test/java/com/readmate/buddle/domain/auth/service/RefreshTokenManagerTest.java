@@ -27,6 +27,6 @@ class RefreshTokenManagerTest {
     Optional<RefreshToken> found = refreshTokenRepository.findById(issued.token());
 
     assertThat(found).map(RefreshToken::toUserId).contains(userId);
-    // refreshTokenRepository.delete(issued);
+    refreshTokenRepository.delete(issued);
   }
 }
