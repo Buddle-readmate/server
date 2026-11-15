@@ -1,0 +1,27 @@
+package com.readmate.buddle.domain.auth.exception;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+
+import com.readmate.buddle.global.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+
+@RequiredArgsConstructor
+public enum AuthErrorCode implements ErrorCode {
+  AUTH_SOCIAL_LOGIN_FAILED(UNAUTHORIZED, "소셜 로그인에 실패했습니다. 다시 시도해 주세요."),
+  AUTH_UNSUPPORTED_SOCIAL_PROVIDER(BAD_REQUEST, "지원하지 않는 소셜 로그인입니다.");
+
+  private final HttpStatus status;
+  private final String message;
+
+  @Override
+  public HttpStatus status() {
+    return status;
+  }
+
+  @Override
+  public String message() {
+    return message;
+  }
+}
