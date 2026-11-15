@@ -2,10 +2,11 @@ package com.readmate.buddle.domain.auth.controller;
 
 import static com.readmate.buddle.domain.user.entity.SocialProvider.GOOGLE;
 
+import com.readmate.buddle.domain.auth.converter.AuthConverter;
 import com.readmate.buddle.domain.auth.dto.request.SocialLoginRequest;
 import com.readmate.buddle.domain.auth.dto.response.LoginResponse;
-import com.readmate.buddle.domain.auth.entity.AccessToken;
-import com.readmate.buddle.domain.auth.entity.LoginTokens;
+import com.readmate.buddle.domain.auth.entity.LoginResult;
+import com.readmate.buddle.domain.auth.entity.RefreshToken;
 import com.readmate.buddle.domain.auth.service.AuthService;
 import com.readmate.buddle.global.response.ApiResponse;
 import com.readmate.buddle.global.security.cookie.TokenCookieManager;
@@ -32,10 +33,11 @@ public class AuthController {
   @PostMapping("/login/google")
   public ApiResponse<LoginResponse> loginWithGoogle(
       @RequestBody @Valid SocialLoginRequest request, HttpServletResponse response) {
-    LoginTokens loginTokens = authService.login(GOOGLE, request.code());
-    tokenCookieManager.addRefreshTokenCookie(response, loginTokens.refreshToken());
-    AccessToken accessToken = loginTokens.accessToken();
-    LoginResponse loginResponse = new LoginResponse(accessToken.value());
+    String authorizationCode = request.code();
+    LoginResult loginResult = authService.login(GOOGLE, authorizationCode);
+    RefreshToken refreshToken = loginResult.refreshToken();
+    tokenCookieManager.addRefreshTokenCookie(response, refreshToken);
+    LoginResponse loginResponse = AuthConverter.toLoginResponse(loginResult);
     return ApiResponse.success(loginResponse);
   }
 }

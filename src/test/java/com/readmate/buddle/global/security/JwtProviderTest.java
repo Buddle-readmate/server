@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.readmate.buddle.domain.auth.entity.AccessToken;
 import com.readmate.buddle.domain.user.entity.UserId;
+import com.readmate.buddle.global.security.jwt.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

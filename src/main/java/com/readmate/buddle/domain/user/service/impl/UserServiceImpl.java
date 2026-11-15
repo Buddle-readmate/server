@@ -2,7 +2,7 @@ package com.readmate.buddle.domain.user.service.impl;
 
 import com.readmate.buddle.domain.user.entity.SocialProvider;
 import com.readmate.buddle.domain.user.entity.User;
-import com.readmate.buddle.domain.user.entity.UserId;
+import com.readmate.buddle.domain.user.entity.UserLoginInfo;
 import com.readmate.buddle.domain.user.repository.UserRepository;
 import com.readmate.buddle.domain.user.service.UserService;
 import java.util.Optional;
@@ -18,10 +18,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public UserId findOrRegister(SocialProvider provider, String providerId) {
+  public UserLoginInfo findOrRegister(SocialProvider provider, String providerId) {
     Optional<User> foundUser = userRepository.findByProviderAndProviderId(provider, providerId);
     User user = foundUser.orElseGet(() -> register(provider, providerId));
-    return user.toUserId();
+    return user.toLoginInfo();
   }
 
   private User register(SocialProvider provider, String providerId) {

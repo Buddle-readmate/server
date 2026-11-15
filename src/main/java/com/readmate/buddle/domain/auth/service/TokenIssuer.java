@@ -4,7 +4,7 @@ import com.readmate.buddle.domain.auth.entity.AccessToken;
 import com.readmate.buddle.domain.auth.entity.LoginTokens;
 import com.readmate.buddle.domain.auth.entity.RefreshToken;
 import com.readmate.buddle.domain.user.entity.UserId;
-import com.readmate.buddle.global.security.JwtProvider;
+import com.readmate.buddle.global.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

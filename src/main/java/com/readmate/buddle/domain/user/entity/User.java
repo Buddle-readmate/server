@@ -61,4 +61,8 @@ public class User extends BaseEntity {
   public boolean isOnboarded() {
     return nickname != null;
   }
+
+  public UserLoginInfo toLoginInfo() {
+    return new UserLoginInfo(toUserId(), isOnboarded());
+  }
 }

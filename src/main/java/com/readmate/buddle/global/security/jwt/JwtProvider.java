@@ -1,4 +1,4 @@
-package com.readmate.buddle.global.security;
+package com.readmate.buddle.global.security.jwt;
 
 import static org.springframework.security.oauth2.jose.jws.MacAlgorithm.HS256;
 
