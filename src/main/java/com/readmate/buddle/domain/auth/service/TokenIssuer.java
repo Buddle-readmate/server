@@ -20,4 +20,9 @@ public class TokenIssuer {
     RefreshToken refreshToken = refreshTokenManager.issue(userId);
     return new LoginTokens(accessToken, refreshToken);
   }
+
+  public LoginTokens reissue(String refreshTokenValue) {
+    UserId userId = refreshTokenManager.consume(refreshTokenValue);
+    return issue(userId);
+  }
 }

@@ -5,6 +5,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 import com.readmate.buddle.global.security.jwt.JwtAccessDeniedHandler;
 import com.readmate.buddle.global.security.jwt.JwtAuthenticationEntryPoint;
+import com.readmate.buddle.global.security.jwt.PublicPathBearerTokenResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,7 +51,7 @@ public class SecurityConfig {
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
           authorize) {
     authorize
-        .requestMatchers("/auth/login/**", "/swagger-ui/**", "/v3/api-docs/**")
+        .requestMatchers("/auth/login/**", "/auth/reissue", "/swagger-ui/**", "/v3/api-docs/**")
         .permitAll()
         .anyRequest()
         .authenticated();
@@ -59,6 +60,7 @@ public class SecurityConfig {
   private void configureResourceServer(
       OAuth2ResourceServerConfigurer<HttpSecurity> resourceServer) {
     resourceServer.jwt(withDefaults());
+    resourceServer.bearerTokenResolver(new PublicPathBearerTokenResolver());
     resourceServer.authenticationEntryPoint(authenticationEntryPoint);
     resourceServer.accessDeniedHandler(accessDeniedHandler);
   }

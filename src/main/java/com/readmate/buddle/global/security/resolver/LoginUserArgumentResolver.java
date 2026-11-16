@@ -15,9 +15,11 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    boolean hasLoginUser = parameter.hasParameterAnnotation(LoginUser.class);
     boolean isUserId = UserId.class.equals(parameter.getParameterType());
-    return hasLoginUser && isUserId;
+    if (isUserId) {
+      validateAnnotated(parameter);
+    }
+    return isUserId;
   }
 
   @Override
@@ -36,5 +38,12 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     if (principal == null) {
       throw new BusinessException(AUTH_TOKEN_REQUIRED);
     }
+  }
+
+  private static void validateAnnotated(MethodParameter parameter) {
+    if (parameter.hasParameterAnnotation(LoginUser.class)) {
+      return;
+    }
+    throw new IllegalStateException("UserId 파라미터에는 @LoginUser가 필요합니다: " + parameter.getMethod());
   }
 }

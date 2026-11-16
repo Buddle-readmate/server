@@ -28,4 +28,9 @@ public class AuthServiceImpl implements AuthService {
     LoginTokens loginTokens = tokenIssuer.issue(userId);
     return new LoginResult(loginTokens, userLoginInfo.onboarded());
   }
+
+  @Override
+  public LoginTokens reissue(String refreshTokenValue) {
+    return tokenIssuer.reissue(refreshTokenValue);
+  }
 }

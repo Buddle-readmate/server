@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenCookieManager {
 
-  private static final String COOKIE_PATH = "/";
+  private static final String COOKIE_PATH = "/auth";
   private static final String SAME_SITE = "None";
   private static final String EMPTY_VALUE = "";
 
