@@ -6,6 +6,7 @@ import com.readmate.buddle.domain.auth.converter.AuthConverter;
 import com.readmate.buddle.domain.auth.dto.request.SocialLoginRequest;
 import com.readmate.buddle.domain.auth.dto.response.LoginResponse;
 import com.readmate.buddle.domain.auth.dto.response.ReissueResponse;
+import com.readmate.buddle.domain.auth.entity.IssuedAccessToken;
 import com.readmate.buddle.domain.auth.entity.LoginResult;
 import com.readmate.buddle.domain.auth.entity.LoginTokens;
 import com.readmate.buddle.domain.auth.entity.RefreshToken;
@@ -17,6 +18,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,5 +57,17 @@ public class AuthController {
     tokenCookieManager.addRefreshTokenCookie(response, newRefreshToken);
     ReissueResponse reissueResponse = AuthConverter.toReissueResponse(loginTokens);
     return ApiResponse.success(reissueResponse);
+  }
+
+  @Operation(summary = "로그아웃", description = "access token을 막고 refresh token을 삭제합니다.")
+  @PostMapping("/logout")
+  public ApiResponse<Void> logout(
+      @AuthenticationPrincipal Jwt jwt,
+      @CookieValue(name = "${jwt.refresh-cookie-name}", required = false) String refreshToken,
+      HttpServletResponse response) {
+    IssuedAccessToken accessToken = AuthConverter.toIssuedAccessToken(jwt);
+    authService.logout(accessToken, refreshToken);
+    tokenCookieManager.removeRefreshTokenCookie(response);
+    return ApiResponse.success(null);
   }
 }

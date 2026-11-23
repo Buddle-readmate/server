@@ -46,4 +46,11 @@ public class RefreshTokenManager {
       throw new BusinessException(AUTH_INVALID_REFRESH_TOKEN);
     }
   }
+
+  public void delete(String tokenValue) {
+    if (tokenValue == null) {
+      return;
+    }
+    refreshTokenRepository.deleteById(tokenValue);
+  }
 }

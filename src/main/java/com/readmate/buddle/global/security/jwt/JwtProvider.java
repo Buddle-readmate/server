@@ -6,6 +6,7 @@ import com.readmate.buddle.domain.auth.entity.AccessToken;
 import com.readmate.buddle.domain.user.entity.UserId;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -41,7 +42,9 @@ public class JwtProvider {
   private JwtClaimsSet createClaims(UserId userId) {
     Instant issuedAt = Instant.now();
     Instant expiresAt = issuedAt.plus(accessTokenExpiration);
+    UUID tokenId = UUID.randomUUID();
     return JwtClaimsSet.builder()
+        .id(tokenId.toString())
         .subject(userId.asText())
         .issuedAt(issuedAt)
         .expiresAt(expiresAt)
