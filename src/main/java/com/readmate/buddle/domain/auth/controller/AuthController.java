@@ -11,8 +11,10 @@ import com.readmate.buddle.domain.auth.entity.LoginResult;
 import com.readmate.buddle.domain.auth.entity.LoginTokens;
 import com.readmate.buddle.domain.auth.entity.RefreshToken;
 import com.readmate.buddle.domain.auth.service.AuthService;
+import com.readmate.buddle.domain.user.entity.UserId;
 import com.readmate.buddle.global.response.ApiResponse;
 import com.readmate.buddle.global.security.cookie.TokenCookieManager;
+import com.readmate.buddle.global.security.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,6 +70,19 @@ public class AuthController {
       HttpServletResponse response) {
     IssuedAccessToken accessToken = AuthConverter.toIssuedAccessToken(jwt);
     authService.logout(accessToken, refreshToken);
+    tokenCookieManager.removeRefreshTokenCookie(response);
+    return ApiResponse.success(null);
+  }
+
+  @Operation(summary = "회원 탈퇴", description = "계정과 관련 데이터를 삭제하고 토큰을 무효화합니다.")
+  @DeleteMapping("/withdraw")
+  public ApiResponse<Void> withdraw(
+      @LoginUser UserId userId,
+      @AuthenticationPrincipal Jwt jwt,
+      @CookieValue(name = "${jwt.refresh-cookie-name}", required = false) String refreshToken,
+      HttpServletResponse response) {
+    IssuedAccessToken accessToken = AuthConverter.toIssuedAccessToken(jwt);
+    authService.withdraw(userId, accessToken, refreshToken);
     tokenCookieManager.removeRefreshTokenCookie(response);
     return ApiResponse.success(null);
   }

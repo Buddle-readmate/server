@@ -44,4 +44,10 @@ public class AuthServiceImpl implements AuthService {
     accessTokenBlacklist.add(accessToken);
     refreshTokenManager.delete(refreshTokenValue);
   }
+
+  @Override
+  public void withdraw(UserId userId, IssuedAccessToken accessToken, String refreshTokenValue) {
+    userService.withdraw(userId);
+    logout(accessToken, refreshTokenValue);
+  }
 }
